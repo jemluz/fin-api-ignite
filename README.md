@@ -1,5 +1,7 @@
 # fin-api-ignite
 
+## Requisitos / Regras de negóci
+
 - [] Deve ser possível criar uma conta
 - [] Deve ser possível buscar o extrato bancário do cliente
 - [] Deve ser possível realizar um depósito
@@ -8,6 +10,8 @@
 - [] Deve ser possível atualizar dados da conta do cliente
 - [] Deve ser possível obter dados da conta do cliente
 - [] Deve ser possível deletar uma conta
+
+## Validações
 
 - [] Não deve ser possível cadastrar uma conta com CPF já existente
 - [] Não deve ser possível fazer depósito em uma conta não existente
