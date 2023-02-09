@@ -17,37 +17,48 @@ app.use(express.json());
 // created at - Date()
 // type - enum "credit" | "debit"
 
-const costumers = [];
+const custumers = [];
 
 function verifyIfExistsAccountCPF(req, res, next) {
   const { cpf } = req.params;
-  const costumer = costumers.find(costumer => costumer.cpf === cpf);
+  const custumer = custumers.find(custumer => custumer.cpf === cpf);
 
-  if (!costumer) {
+  if (!custumer) {
     return res.status(400).json({ error: "Costumer not found" })
   }
 
   // criação de um objeto costumer dentro da reqisição para
   // ser acessado após o next()
-  req.costumer = costumer;
+  req.custumer = custumer;
 
   return next();
+}
+
+function getBalance(statement) {
+  const balance = statement.reduce((acc, operation) => {
+    if(operation.type === "credit") {
+      return acc + operation.amount
+    } else {
+      return acc - operation.amount
+    }
+  }, 0);
+  return balance;
 }
 
 app.post("/account", (req, res) => {
   const { name, cpf } = req.body;
 
-  const costumerAlreadyExists = costumers.some(
-    (costumer) => costumer.cpf === cpf
+  const custumerAlreadyExists = custumers.some(
+    (custumer) => custumer.cpf === cpf
   )
 
   if(costumerAlreadyExists) {
     return res.status(400).json({
-      error: "Costumer already exists!"
+      error: "Custumer already exists!"
     })
   }
 
-  costumers.push({
+  custumers.push({
     cpf,
     name,
     id: uuidv4(),
@@ -58,12 +69,12 @@ app.post("/account", (req, res) => {
 })
 
 app.get("/statement/:cpf", verifyIfExistsAccountCPF, (req, res) => {
-  return res.json(costumer.statement);
+  return res.json(custumer.statement);
 })
 
 app.post("/deposit", verifyIfExistsAccountCPF, (req, res) => {
   const { description, amount } = request.body;
-  const { costumer } = request;
+  const { custumer } = req;
 
   const statementOperation = {
     description,
@@ -72,9 +83,29 @@ app.post("/deposit", verifyIfExistsAccountCPF, (req, res) => {
     type: "credit"
   }
 
-  customer.statement.push(statementOperation);
+  custumer.statement.push(statementOperation);
 
-  return response.status(201).send();
+  return res.status(201).send();
+})
+
+app.post("/withdraw", verifyIfExistsAccountCPF, (req, res) => {
+  const { amount } = req.body;
+  const { custumer } = req;
+
+  const balance = getBalance(custumer.statement);
+
+  if (balance < amount) {
+    return res.status(400).json({ error: "Insuficient funds!!"});
+  }
+
+  const statementOperation = {
+    amount,
+    created_at: new Date(),
+    type: "debit",
+  }
+
+  custumer.statement.push(statementOperation);
+  return res.status(201).send();
 })
 
 app.listen(3333);
