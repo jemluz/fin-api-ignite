@@ -14,7 +14,7 @@ app.use(express.json());
 const costumers = [];
 
 app.post("/account", (req, res) => {
-  const { name, cpf } = request.body;
+  const { name, cpf } = req.body;
 
   const costumerAlreadyExists = costumers.some(
     (costumer) => costumer.cpf === cpf
@@ -37,8 +37,12 @@ app.post("/account", (req, res) => {
 })
 
 app.get("/statement/:cpf", (req, res) => {
-  const { cpf } = request.params;
+  const { cpf } = req.params;
   const costumer = costumers.find(costumer => costumer.cpf === cpf);
+
+  if (!costumer) {
+    return res.status(400).json({ error: "Costumer not found" })
+  }
 
   return res.json(costumer.statement);
 })
