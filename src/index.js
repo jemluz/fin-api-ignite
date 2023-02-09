@@ -11,6 +11,12 @@ app.use(express.json());
 // id - uuid
 // statement - Array
 
+// Statement
+// description - String
+// amount - double
+// created at - Date()
+// type - enum "credit" | "debit"
+
 const costumers = [];
 
 function verifyIfExistsAccountCPF(req, res, next) {
@@ -51,11 +57,24 @@ app.post("/account", (req, res) => {
   return res.status(201).send();
 })
 
-app.get("/statement/:cpf", (req, res) => {
-
-  
-
+app.get("/statement/:cpf", verifyIfExistsAccountCPF, (req, res) => {
   return res.json(costumer.statement);
+})
+
+app.post("/deposit", verifyIfExistsAccountCPF, (req, res) => {
+  const { description, amount } = request.body;
+  const { costumer } = request;
+
+  const statementOperation = {
+    description,
+    amount,
+    created_at: new Date(),
+    type: "credit"
+  }
+
+  customer.statement.push(statementOperation);
+
+  return response.status(201).send();
 })
 
 app.listen(3333);
