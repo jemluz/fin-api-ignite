@@ -13,6 +13,21 @@ app.use(express.json());
 
 const costumers = [];
 
+function verifyIfExistsAccountCPF(req, res, next) {
+  const { cpf } = req.params;
+  const costumer = costumers.find(costumer => costumer.cpf === cpf);
+
+  if (!costumer) {
+    return res.status(400).json({ error: "Costumer not found" })
+  }
+
+  // criação de um objeto costumer dentro da reqisição para
+  // ser acessado após o next()
+  req.costumer = costumer;
+
+  return next();
+}
+
 app.post("/account", (req, res) => {
   const { name, cpf } = req.body;
 
@@ -37,12 +52,8 @@ app.post("/account", (req, res) => {
 })
 
 app.get("/statement/:cpf", (req, res) => {
-  const { cpf } = req.params;
-  const costumer = costumers.find(costumer => costumer.cpf === cpf);
 
-  if (!costumer) {
-    return res.status(400).json({ error: "Costumer not found" })
-  }
+  
 
   return res.json(costumer.statement);
 })
