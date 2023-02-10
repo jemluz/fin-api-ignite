@@ -1,18 +1,24 @@
 # fin-api-ignite
 
-## Requisitos / Regras de negócio
+### /account
 
 - [x] Deve ser possível criar uma conta
-- [x] Deve ser possível buscar o extrato bancário do cliente
-- [x] Deve ser possível realizar um depósito
-- [x] Deve ser possível realizar um saque
-- [x] Deve ser possível buscar o extrato bancário do cliente por data
-- [x] Deve ser possível atualizar dados da conta do cliente
-- [x] Deve ser possível obter dados da conta do cliente
-- [x] Deve ser possível obter o balanço da conta do cliente
+- [x] Deve ser possível atualizar dados de uma conta
+- [x] Deve ser possível obter dados de uma conta
 - [x] Deve ser possível deletar uma conta
 
-## Validações
+### /statement
+
+- [x] Deve ser possível buscar o extrato bancário do cliente
+- [x] Deve ser possível buscar o extrato bancário do cliente por data
+
+### /deposit, /withdraw and /balance
+
+- [x] Deve ser possível realizar um depósito
+- [x] Deve ser possível realizar um saque
+- [x] Deve ser possível obter o balanço da conta do cliente
+
+## Validations
 
 - [x] Não deve ser possível cadastrar uma conta com CPF já existente
 - [x] Não deve ser possível fazer depósito em uma conta não existente
